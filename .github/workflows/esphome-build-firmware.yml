@@ -98,12 +98,12 @@ jobs:
       - name: Rename Files & Move files for firmware file
         run: |
           mkdir -p output/firmware
-          cp ${{ steps.esphome-build.outputs.name }}/* output/firmware/${{ steps.esphome-build.outputs.original-name }}/
+          cp -r ${{ steps.esphome-build.outputs.name }}/* output/firmware/${{ steps.esphome-build.outputs.original-name }}/
 
       - name: Rename Files & Move files for versioning
         run: |
           mkdir -p output/${{ format('{0}-{1}', steps.esphome-build.outputs.project-name, needs.prepare.outputs.version) }}
-          vm ${{ steps.esphome-build.outputs.name }}/* output/${{ format('{0}-{1}', steps.esphome-build.outputs.project-name, needs.prepare.outputs.version) }}/
+          mv ${{ steps.esphome-build.outputs.name }}/* output/${{ format('{0}-{1}', steps.esphome-build.outputs.project-name, needs.prepare.outputs.version) }}/
           
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.4
