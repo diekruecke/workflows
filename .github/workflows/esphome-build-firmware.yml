@@ -112,7 +112,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.4
         with:
           name: firmware
-          path: firmware
+          path: firmware/
 
       - name: Rename Files & Move files for versioning
         run: |
