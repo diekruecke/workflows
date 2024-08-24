@@ -134,14 +134,7 @@ jobs:
           version="${{ needs.prepare.outputs.version }}"
           mkdir -p "output/$version"
           pushd files
-          for device in *; do
-            pushd $device
-            pushd $version
-            cp * "../../../output/$version/"
-            popd
-            popd
-          done
-        
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.4
         with:
