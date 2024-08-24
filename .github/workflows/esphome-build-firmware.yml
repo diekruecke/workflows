@@ -94,7 +94,6 @@ jobs:
           complete-manifest: true
           release-summary: ${{ inputs.release-summary }}
           release-url: ${{ inputs.release-url }}
-          cache: true
 
       - name: Rename Files & Move files for versioning
         run: |
