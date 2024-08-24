@@ -97,8 +97,8 @@ jobs:
 
       - name: Rename Files & Move files for firmware file
         run: |
-          mkdir -p firmware/${{ steps.esphome-build.outputs.original-name }}
-          cp -r ${{ steps.esphome-build.outputs.name }}/* firmware/${{ steps.esphome-build.outputs.original-name }}/
+          mkdir -p firmware
+          cp -r ${{ steps.esphome-build.outputs.name }}/* firmware/
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4.3.4
@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.4
         with:
           name: firmware
-          path: output/*/
+          path: output
 
 
   # combine:
