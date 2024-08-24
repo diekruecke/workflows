@@ -111,7 +111,7 @@ jobs:
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: firmware
+          name: ${{ steps.esphome-build.outputs.original-name }}
           path: firmware
 
       - name: Rename Files & Move files for versioning
