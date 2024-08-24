@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.4
         with:
           # name: ${{ inputs.combined-name != '' && format('{0}-{1}', needs.prepare.outputs.artifact-prefix, steps.esphome-build.outputs.name) || steps.esphome-build.outputs.original-name }}
-          name: ${{ inputs.combined-name != '' && format('{0}-{1}', steps.esphome-build.outputs.project-name) || steps.esphome-build.outputs.original-name }}
+          name: ${{ inputs.combined-name != '' && steps.esphome-build.outputs.project-name || steps.esphome-build.outputs.original-name }}
           path: output
 
   combine:
