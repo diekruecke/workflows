@@ -95,14 +95,6 @@ jobs:
           release-summary: ${{ inputs.release-summary }}
           release-url: ${{ inputs.release-url }}
 
-  # artifact:
-  #   name: Create Artifacts
-  #   needs:
-  #     - prepare
-  #     - build
-  #   runs-on: ubuntu-latest
-  #   steps:
-
       - name: Rename Files & Move files for firmware file
         run: |
           mkdir -p firmware/${{ steps.esphome-build.outputs.original-name }}
@@ -111,7 +103,7 @@ jobs:
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: ${{ steps.esphome-build.outputs.original-name }}
+          name: page-firmware-${{ steps.esphome-build.outputs.original-name }}
           path: firmware
 
       - name: Rename Files & Move files for versioning
@@ -126,6 +118,32 @@ jobs:
           # name: ${{ inputs.combined-name != '' && format('{0}-{1}', inputs.combined-name, steps.esphome-build.outputs.original-name) || steps.esphome-build.outputs.original-name }}
           name: ${{ inputs.combined-name != '' && steps.esphome-build.outputs.project-name || steps.esphome-build.outputs.original-name }}
           path: output
+
+
+  pagefirmnware:
+    name: Firmwarefile für die Page
+    needs:
+      - prepare
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          path: output
+          pattern: page-firmware-*
+
+      - name: Delete Page Firmware artifacts
+        uses: geekyeggo/delete-artifact@v5.0.0
+        with:
+          name: page-firmware-*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: firmware
+          path: output
+
 
   # combine:
   #   name: Combine manifests
