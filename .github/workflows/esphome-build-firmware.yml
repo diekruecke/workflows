@@ -124,9 +124,10 @@ jobs:
           var_original_name="${{ steps.esphome-build.outputs.original-name }}"
           var_output_name="${{ steps.esphome-build.outputs.name }}"
 
-          mkdir -p ghpages-info/$var_original_name
+          mkdir -p ghpages-info
 
-          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/$var_original_name/ghpagesinfo.json
+          # jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/$var_original_name/ghpagesinfo.json
+          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/ghpagesinfo.json
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.4
@@ -183,7 +184,7 @@ jobs:
           # jq -s '(.[0] | del(.builds)) + {"builds": (reduce .[].builds as $b ([]; . + $b))}' files/*/$version/manifest.json > output/$version/manifest.json
           # jq -s '.[0].list=[.[].list|add]|.[0]' *.json
 
-          jq -s '.' files/*/*/ghpagesinfo.json > output/ghpages-table-info.json
+          jq -s '.' files/*/ghpagesinfo.json > output/ghpages-table-info.json
 
 
       - name: Upload artifact
