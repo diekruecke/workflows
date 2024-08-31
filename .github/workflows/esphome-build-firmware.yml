@@ -124,18 +124,18 @@ jobs:
           var_original_name="${{ steps.esphome-build.outputs.original-name }}"
           var_output_name="${{ steps.esphome-build.outputs.name }}"
 
-          mkdir -p ghpages-info
+          mkdir -p ghpages-info/$var_original_name
 
-          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/ghpagesinfo.json
+          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/$var_original_name/ghpagesinfo.json
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: ${{ needs.prepare.outputs.artifact-prefix }}-${{ steps.esphome-build.outputs.original-name }}-ghpages-info
+          name: ghpages-info-${{ steps.esphome-build.outputs.original-name }}
           path: ghpages-info
 
-  pagefirmnware:
-    name: Firmwarefile für die Page
+  ghpages-firmware-file:
+    name: Generate Firmwarefile for GH-Pages
     needs:
       - prepare
       - build
@@ -156,6 +156,40 @@ jobs:
         uses: actions/upload-artifact@v4.3.4
         with:
           name: firmware
+          path: output
+
+  ghpages-table-file:
+    name: Generate Tablefile for GH-Pages
+    needs:
+      - prepare
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          path: files
+          pattern: ghpages-info-*
+
+      # - name: Delete Page Firmware artifacts
+      #   uses: geekyeggo/delete-artifact@v5.0.0
+      #   with:
+      #     name: ghpages-info-*
+
+      - name: Combine Tablefiles
+        run: |
+          mkdir -p output
+
+          # jq -s '(.[0] | del(.builds)) + {"builds": (reduce .[].builds as $b ([]; . + $b))}' files/*/$version/manifest.json > output/$version/manifest.json
+          # jq -s '.[0].list=[.[].list|add]|.[0]' *.json
+
+          jq -s '.' */ghpagesinfo.json > output/ghpages-table-info.json
+
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: ghpages-table-info
           path: output
 
 
