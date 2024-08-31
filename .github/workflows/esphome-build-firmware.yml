@@ -183,7 +183,7 @@ jobs:
           # jq -s '(.[0] | del(.builds)) + {"builds": (reduce .[].builds as $b ([]; . + $b))}' files/*/$version/manifest.json > output/$version/manifest.json
           # jq -s '.[0].list=[.[].list|add]|.[0]' *.json
 
-          jq -s '.' */ghpagesinfo.json > output/ghpages-table-info.json
+          jq -s '.' files/*/ghpagesinfo.json > output/ghpages-table-info.json
 
 
       - name: Upload artifact
