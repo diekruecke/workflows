@@ -119,6 +119,20 @@ jobs:
           name: ${{ inputs.combined-name != '' && steps.esphome-build.outputs.project-name || steps.esphome-build.outputs.original-name }}
           path: output
 
+      - name: Create .json for GH-Pages
+        run: |
+          var_original_name="${{ steps.esphome-build.outputs.original-name }}"
+          var_output_name="${{ steps.esphome-build.outputs.name }}"
+
+          mkdir -p ghpages-info
+
+          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" > ghpages-info/ghpagesinfo.json
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: ${{ needs.prepare.outputs.artifact-prefix }}-ghpages-info
+          path: ghpages-info
 
   pagefirmnware:
     name: Firmwarefile für die Page
