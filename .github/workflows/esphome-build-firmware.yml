@@ -126,12 +126,12 @@ jobs:
 
           mkdir -p ghpages-info
 
-          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" > ghpages-info/ghpagesinfo.json
+          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/ghpagesinfo.json
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: ${{ needs.prepare.outputs.artifact-prefix }}-ghpages-info
+          name: ${{ needs.prepare.outputs.artifact-prefix }}-${{ steps.esphome-build.outputs.original-name }}-ghpages-info
           path: ghpages-info
 
   pagefirmnware:
