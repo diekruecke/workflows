@@ -123,11 +123,12 @@ jobs:
         run: |
           var_original_name="${{ steps.esphome-build.outputs.original-name }}"
           var_output_name="${{ steps.esphome-build.outputs.name }}"
+          var_github="${{ github.server_url }}/${{ github.repository }}/blob/main/README.md"
 
           mkdir -p ghpages-info
 
           # jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/$var_original_name/ghpagesinfo.json
-          jq -n --arg devicename "$var_original_name" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/ghpagesinfo.json
+          jq -n --arg devicename "$var_original_name" --arg github "$var_github" --arg manifest "./firmware/diekruecke-$var_original_name/manifest.json" --arg firmware "./firmware/diekruecke-$var_original_name/$var_output_name.factory.bin" --arg ota "./firmware/diekruecke-$var_original_name/$var_output_name.ota.bin" '{ "devicename": $devicename, "github": $github, "manifest": $manifest, "firmware": $firmware, "ota": $ota }' > ghpages-info/ghpagesinfo.json
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.3.4
